@@ -1,5 +1,6 @@
 'use client';
 
+import axios from 'axios';
 import { useState } from 'react';
 
 export default function UploadAndAskPage() {
@@ -21,9 +22,10 @@ export default function UploadAndAskPage() {
     formData.append('file', file);  // Add file to FormData
 
     // Upload the document
-    const response = await fetch('/api/upload-document', {
-      method: 'POST',
-      body: formData,
+    const response = await axios.post('http://localhost:3000/api/test', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
 
     const result = await response.json();
