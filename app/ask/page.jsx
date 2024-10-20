@@ -11,7 +11,7 @@ export default function AskPage() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const response = await fetch('/api/ask', {
+    const response = await fetch('/api/documentask', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

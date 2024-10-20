@@ -46,6 +46,7 @@ export async function POST(request) {
     });
 
     const answer = completionResponse.data.choices[0].message.content;
+    console.log('Answer:', answer);
 
     return new Response(JSON.stringify({ answer }), {
       status: 200,

@@ -17,24 +17,61 @@ export default function UploadAndAskPage() {
       setMessage('Please upload a document first.');
       return;
     }
-
     const formData = new FormData();
     formData.append('file', file);  // Add file to FormData
-
-    // Upload the document
-    const response = await axios.post('http://localhost:3000/api/test', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-
-    const result = await response.json();
-    if (response.ok) {
-      setUploaded(true);
-      setMessage('Document uploaded successfully. Now you can ask questions.');
-    } else {
-      setMessage(result.error);
+    console.log('File appended to FormData:', file.name);
+    try {
+      const response = await axios.post('/api/test', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      setMessage(response.data.message); // Show success message
+    } catch (error) {
+      setMessage('Error: ' + error.response?.data?.message || error.message);
     }
+    return;
+
+    // const formData = new FormData();
+    // formData.append('file', file);  // Add file to FormData
+    // const formData = new FormData();
+    formData.append('file', file);  // Add file to FormData
+    console.log('File appended to FormData:', file.name);  // Log file name
+
+    console.log('Sending PDF file for processing...');
+    try {
+      const response = await axios.post('/api/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.status === 200) {
+        console.log('PDF processed successfully');
+        setUploaded(true);
+        setMessage('Document uploaded and processed successfully. Now you can ask questions.');
+      } else {
+        setMessage('Error processing document.');
+      }
+    } catch (error) {
+      console.error('Error processing PDF:', error);
+      setMessage('Error processing document. Please try again.');
+    }
+    
+    // Upload the document
+    // const response = await axios.post('http://localhost:3000/api/test', formData, {
+    //   headers: {
+    //     'Content-Type': 'multipart/form-data',
+    //   },
+    // });
+
+    // const result = await response.json();
+    // if (response.ok) {
+    //   setUploaded(true);
+    //   setMessage('Document uploaded successfully. Now you can ask questions.');
+    // } else {
+    //   setMessage(result.error);
+    // }
   }
 
   async function handleAskQuestion(e) {
